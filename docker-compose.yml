@@ -1,0 +1,27 @@
+version: '3'
+services:
+  web:
+    build: 
+      context: ./src/web
+    environment:
+      APP_ENV: "debug"
+      APP_DEBUG: "True"
+      MONGODB_USERNAME: ${MONGO_ROOT_USER}
+      MONGODB_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGODB_HOSTNAME: ${MONGO_CONTAINER_NAME}
+    ports:
+        - 5001:5000
+    depends_on:
+      - db
+  db:
+    build: ./db
+    container_name: mongo
+    volumes:
+      - ./database:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    expose:
+      - ${MONGO_PORT}
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
